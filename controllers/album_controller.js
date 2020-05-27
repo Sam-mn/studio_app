@@ -1,4 +1,5 @@
 const { Album, User } = require("../models");
+const { matchedData, validationResult } = require("express-validator");
 
 const index = async (req, res) => {
     let user = null;
@@ -20,12 +21,36 @@ const index = async (req, res) => {
     });
 };
 
-const show = async (req, res) => {
-    const albumId = req.params.albumId;
+const store = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        res.status(422).send({
+            status: "fail",
+            data: errors.array(),
+        });
+        return;
+    }
+
+    const validData = matchedData(req);
+    validData.user_id = req.user.id;
+
+    try {
+        const album = await new Album(validData).save();
+        res.send({
+            status: "success",
+            data: { album },
+        });
+    } catch (error) {
+        res.status(500).send({
+            status: "error",
+            message: "Exception thrown in database when creating a new album.",
+        });
+        throw error;
+    }
 };
 
-const store = async (req, res) => {
-    res.send("STORE");
+const show = async (req, res) => {
+    const albumId = req.params.albumId;
 };
 
 module.exports = {
