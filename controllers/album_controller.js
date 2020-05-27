@@ -1,16 +1,18 @@
-const { Album } = require("../models");
+const { Album, User } = require("../models");
 
 const index = async (req, res) => {
-    const albums = await Album.fetchAll();
-    res.send({
-        status: "success",
-        albums,
-    });
-};
+    let user = null;
+    try {
+        user = await new User({ id: req.user.id }).fetch({
+            withRelated: "album",
+        });
+    } catch (err) {
+        console.error(err);
+        res.sendStatus(404);
+        return;
+    }
 
-const show = async (req, res) => {
-    const albumId = req.params.albumId;
-    const album = await new Album({ id: albumId }).fetch();
+    const album = user.related("album");
 
     res.send({
         status: "success",
@@ -18,7 +20,16 @@ const show = async (req, res) => {
     });
 };
 
+const show = async (req, res) => {
+    const albumId = req.params.albumId;
+};
+
+const store = async (req, res) => {
+    res.send("STORE");
+};
+
 module.exports = {
     index,
     show,
+    store,
 };
