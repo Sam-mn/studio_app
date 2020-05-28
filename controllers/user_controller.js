@@ -8,6 +8,7 @@ const show = async (req, res) => {
             status: "fail",
             message: "authentication required",
         });
+        return;
     }
 
     // const user = await new models.User({ id: req.user.id }).fetch({

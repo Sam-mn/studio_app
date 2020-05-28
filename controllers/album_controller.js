@@ -51,6 +51,21 @@ const store = async (req, res) => {
 
 const show = async (req, res) => {
     const albumId = req.params.albumId;
+    const album = await new Album({ id: albumId }).fetch({
+        withRelated: "photo",
+    });
+
+    if (album.get("user_id") !== req.user.id) {
+        res.send({
+            message: "It is not your album",
+        });
+        return;
+    }
+
+    res.send({
+        status: "success",
+        album,
+    });
 };
 
 module.exports = {

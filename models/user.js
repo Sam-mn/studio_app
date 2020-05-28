@@ -6,6 +6,9 @@ module.exports = (bookshelf) => {
             album() {
                 return this.hasMany("Album");
             },
+            photo() {
+                return this.hasMany("Photo");
+            },
         },
         {
             hashSaltRounds: 10,
