@@ -33,11 +33,15 @@ const login = async (req, res) => {
     }
 
     const payload = {
-        sub: user.get("id"),
-        email: user.get("email"),
+        data: {
+            id: user.get("id"),
+            email: user.get("email"),
+        },
     };
 
-    var token = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET);
+    var token = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+        expiresIn: process.env.TOKEN_LIFETIME || "1d",
+    });
 
     res.send({
         data: {

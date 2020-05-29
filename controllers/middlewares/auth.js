@@ -1,54 +1,38 @@
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const { User } = require("../../models");
 
-const basic = async (req, res, next) => {
-    console.log("I will do it");
+const checkTheToken = async (req, res, next) => {
     if (!req.headers.authorization) {
+        return;
+    }
+
+    const [authType, token] = req.headers.authorization.split(" ");
+
+    if (authType.toLowerCase() !== "bearer") {
         res.status(401).send({
             status: "fail",
-            message: "Authorization required",
+            data: "No token found in request headers.",
         });
         return;
     }
 
-    const [authSchema, base64Payload] = req.headers.authorization.split(" ");
-
-    if (authSchema.toLowerCase() !== "basic") {
-        next();
-    }
-
-    const decodedPayload = Buffer.from(base64Payload, "base64").toString(
-        "ascii"
-    );
-    const [email, password] = decodedPayload.split(":");
-
-    const user = await new User({ email }).fetch({ require: false });
-    if (!user) {
-        res.status(401).send({
+    let payload = null;
+    try {
+        payload = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    } catch (err) {
+        res.status(403).send({
             status: "fail",
-            data: "Authorization failed",
+            data: "Authentication Failed.",
         });
-        return;
+        throw err;
     }
 
-    const hashedPassword = user.get("password");
-    const checkTheHashedPassword = await bcrypt.compare(
-        password,
-        hashedPassword
-    );
-    if (!checkTheHashedPassword) {
-        res.status(401).send({
-            status: "fail",
-            data: "Wrong password",
-        });
-        return;
-    }
-
-    req.user = user;
+    req.user = payload;
 
     next();
 };
 
 module.exports = {
-    basic,
+    checkTheToken,
 };

@@ -4,7 +4,7 @@ const { matchedData, validationResult } = require("express-validator");
 const index = async (req, res) => {
     let user = null;
     try {
-        user = await new User({ id: req.user.id }).fetch({
+        user = await new User({ id: req.user.data.id }).fetch({
             withRelated: "album",
         });
     } catch (err) {
@@ -32,7 +32,7 @@ const store = async (req, res) => {
     }
 
     const validData = matchedData(req);
-    validData.user_id = req.user.id;
+    validData.user_id = req.user.data.id;
 
     try {
         const album = await new Album(validData).save();
@@ -55,7 +55,7 @@ const show = async (req, res) => {
         withRelated: "photo",
     });
 
-    if (album.get("user_id") !== req.user.id) {
+    if (album.get("user_id") !== req.user.data.id) {
         res.send({
             message: "It is not your album",
         });
@@ -68,8 +68,33 @@ const show = async (req, res) => {
     });
 };
 
+const destroy = async (req, res) => {
+    console.log("delete");
+    const albumId = req.params.albumId;
+    try {
+        const album = await new Album({ id: albumId }).fetch({
+            withRelated: "photo",
+        });
+        if (!album) {
+            return;
+        }
+        await album.photo().detach();
+        await new Album({ id: req.params.albumId }).destroy();
+        res.send({
+            status: "success",
+            data: null,
+        });
+    } catch (error) {
+        res.status(500).send({
+            status: "error",
+            message: "Exception thrown in database when deleting an album.",
+        });
+        throw error;
+    }
+};
 module.exports = {
     index,
     show,
     store,
+    destroy,
 };
