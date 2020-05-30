@@ -1,6 +1,8 @@
-const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { User } = require("../../models");
+
+/**
+ * Check the token before (/users, /albums, /photos) requests
+ */
 
 const checkTheToken = async (req, res, next) => {
     if (!req.headers.authorization) {

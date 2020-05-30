@@ -33,21 +33,34 @@ const index = async (req, res) => {
 
 const show = async (req, res) => {
     const albumId = req.params.albumId;
-    const album = await new Album({ id: albumId }).fetch({
-        withRelated: "photo",
-    });
-
-    if (album.get("user_id") !== req.user.data.id) {
-        res.send({
-            message: "It is not your album",
+    try {
+        const album = await new Album({
+            id: albumId,
+            user_id: req.user.data.id,
+        }).fetch({
+            withRelated: "photo",
+            require: false,
         });
-        return;
-    }
 
-    res.send({
-        status: "success",
-        album,
-    });
+        if (!album) {
+            res.status(404).send({
+                status: "fail",
+                message: "The album is not exist",
+            });
+            return;
+        }
+
+        res.send({
+            status: "success",
+            album,
+        });
+    } catch (error) {
+        res.status(500).send({
+            status: "error",
+            message: "An unexpected error occurred when trying to get album.",
+        });
+        throw error;
+    }
 };
 
 /**
@@ -87,6 +100,7 @@ const store = async (req, res) => {
  * PUT
  * Update a specific album
  */
+
 const update = async (req, res) => {
     const album = await new Album({
         id: req.params.albumId,
@@ -139,8 +153,14 @@ const destroy = async (req, res) => {
     try {
         const album = await new Album({ id: albumId }).fetch({
             withRelated: "photo",
+            require: false,
         });
+
         if (!album) {
+            res.status(404).send({
+                status: "fail",
+                message: "The album is not exist",
+            });
             return;
         }
         await album.photo().detach();

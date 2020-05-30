@@ -12,7 +12,10 @@ const {
     update,
     destroy,
 } = require("../controllers/album_controller");
-const { addPhotoToAlbum } = require("../controllers/photo_controller");
+const {
+    addPhotoToAlbum,
+    deletePhotoFromAlbum,
+} = require("../controllers/photo_controller");
 
 //Get all albums
 router.get("/", index);
@@ -36,6 +39,6 @@ router.post(
 //Destroy a specific album
 router.delete("/:albumId", destroy);
 
-router.delete("/:albumId/photos/:photoId");
+router.delete("/:albumId/photos/:photoId", deletePhotoFromAlbum);
 
 module.exports = router;

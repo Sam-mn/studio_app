@@ -31,20 +31,33 @@ const index = async (req, res) => {
 
 const show = async (req, res) => {
     const photoId = req.params.photoId;
-    const photo = await new Photo({ id: photoId }).fetch({
-        require: false,
-    });
-
-    if (photo.get("user_id") !== req.user.data.id) {
-        res.send({
-            message: "It is not your photo",
+    try {
+        const photo = await new Photo({
+            id: photoId,
+            user_id: req.user.data.id,
+        }).fetch({
+            require: false,
         });
-        return;
+
+        if (!photo) {
+            res.status(404).send({
+                status: "fail",
+                message: "The photo is not exist",
+            });
+            return;
+        }
+
+        res.send({
+            status: "success",
+            photo,
+        });
+    } catch (error) {
+        res.status(500).send({
+            status: "error",
+            message: "An unexpected error occurred when trying to get photo.",
+        });
+        throw error;
     }
-    res.send({
-        status: "success",
-        photo,
-    });
 };
 
 /**
@@ -130,10 +143,49 @@ const update = async (req, res) => {
 };
 
 /**
+ * DELETE
+ * Delete a specific photo
+ */
+
+const destroy = async (req, res) => {
+    const photoId = req.params.photoId;
+    try {
+        const photo = await new Photo({
+            id: photoId,
+            user_id: req.user.data.id,
+        }).fetch({
+            withRelated: "album",
+            require: false,
+        });
+
+        if (!photo) {
+            res.status(404).send({
+                status: "fail",
+                message: "The photo is not exist",
+            });
+            return;
+        }
+
+        await photo.album().detach();
+        await photo.destroy();
+
+        res.send({
+            status: "success",
+            data: null,
+        });
+    } catch (error) {
+        res.status(500).send({
+            status: "error",
+            message: "Exception thrown in database when deleting a photo.",
+        });
+        throw error;
+    }
+};
+
+/**
  * POST
  * Post many photos with related album
  */
-
 const addPhotoToAlbum = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -181,28 +233,32 @@ const addPhotoToAlbum = async (req, res) => {
 };
 
 /**
- * DELETE
- * Delete a specific photo
+ * Delete a specific photo from a specific album
  */
 
-const destroy = async (req, res) => {
+const deletePhotoFromAlbum = async (req, res) => {
     const photoId = req.params.photoId;
+    const albumId = req.params.albumId;
+
     try {
         const photo = await new Photo({
             id: photoId,
             user_id: req.user.data.id,
-        }).fetch({
-            withRelated: "album",
-        });
-        if (!photo) {
+        }).fetch({ withRelated: "album", require: false });
+        const album = await new Album({
+            id: albumId,
+            user_id: req.user.data.id,
+        }).fetch({ withRelated: "photo", require: false });
+
+        if (!photo || !album) {
             res.status(403).send({
                 status: "fail",
-                message: "there is no photo with this id.",
+                message: `You do not have an album with id ${albumId} or a photo with id ${photoId}`,
             });
             return;
         }
-        await photo.album().detach();
-        await photo.destroy();
+        await album.photo().detach(photo);
+
         res.send({
             status: "success",
             data: null,
@@ -210,7 +266,8 @@ const destroy = async (req, res) => {
     } catch (error) {
         res.status(500).send({
             status: "error",
-            message: "Exception thrown in database when deleting a photo.",
+            message:
+                "Exception thrown in database when deleting the relation between photo and album.",
         });
         throw error;
     }
@@ -221,6 +278,7 @@ module.exports = {
     show,
     store,
     update,
-    addPhotoToAlbum,
     destroy,
+    addPhotoToAlbum,
+    deletePhotoFromAlbum,
 };
