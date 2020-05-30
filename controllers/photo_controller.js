@@ -18,6 +18,7 @@ const index = async (req, res) => {
         photo,
     });
 };
+
 const store = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -78,21 +79,30 @@ const addPhotoToAlbum = async (req, res) => {
     }
 
     const validData = matchedData(req);
-    validData.user_id = req.user.data.id;
-
     try {
-        const photo = await new Photo(validData).save();
-        const album = await new Album({ id: req.params.albumId }).fetch({
-            withRelated: "photo",
-        });
+        validData.photos.forEach(async (element) => {
+            element.user_id = req.user.data.id;
 
-        const result = await album.photo().attach(photo);
+            const photo = await new Photo(element).save();
+            const album = await new Album({
+                id: req.params.albumId,
+            }).fetch({
+                withRelated: "photo",
+            });
+            if (!album) {
+                res.status(403).send({
+                    status: "fail",
+                    message: `You do not have an album with id ${req.params.albumId}`,
+                });
+                return;
+            }
+
+            await album.photo().attach(photo);
+        });
 
         res.send({
             status: "success",
-            data: {
-                result,
-            },
+            data: null,
         });
     } catch (error) {
         res.status(500).send({
@@ -105,17 +115,23 @@ const addPhotoToAlbum = async (req, res) => {
 };
 
 const destroy = async (req, res) => {
-    console.log("delete");
     const photoId = req.params.photoId;
     try {
-        const photo = await new Photo({ id: photoId }).fetch({
+        const photo = await new Photo({
+            id: photoId,
+            user_id: req.user.data.id,
+        }).fetch({
             withRelated: "album",
         });
         if (!photo) {
+            res.status(403).send({
+                status: "fail",
+                message: "there is no photo with this id.",
+            });
             return;
         }
         await photo.album().detach();
-        await new Photo({ id: req.params.photoId }).destroy();
+        await photo.destroy();
         res.send({
             status: "success",
             data: null,
