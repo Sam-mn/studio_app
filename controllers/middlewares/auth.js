@@ -4,6 +4,10 @@ const { User } = require("../../models");
 
 const checkTheToken = async (req, res, next) => {
     if (!req.headers.authorization) {
+        res.status(401).send({
+            status: "fail",
+            data: "No token found in request headers.",
+        });
         return;
     }
 

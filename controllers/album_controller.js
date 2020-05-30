@@ -1,6 +1,11 @@
 const { Album, User } = require("../models");
 const { matchedData, validationResult } = require("express-validator");
 
+/**
+ * GET
+ * Get all albums
+ */
+
 const index = async (req, res) => {
     let user = null;
     try {
@@ -21,6 +26,11 @@ const index = async (req, res) => {
     });
 };
 
+/**
+ *  GET
+ * Get a specific album
+ */
+
 const show = async (req, res) => {
     const albumId = req.params.albumId;
     const album = await new Album({ id: albumId }).fetch({
@@ -39,6 +49,11 @@ const show = async (req, res) => {
         album,
     });
 };
+
+/**
+ *  POST
+ * Store a new album
+ */
 
 const store = async (req, res) => {
     const errors = validationResult(req);
@@ -68,6 +83,10 @@ const store = async (req, res) => {
     }
 };
 
+/**
+ * PUT
+ * Update a specific album
+ */
 const update = async (req, res) => {
     const album = await new Album({
         id: req.params.albumId,
@@ -108,6 +127,11 @@ const update = async (req, res) => {
         throw error;
     }
 };
+
+/**
+ * DELETE
+ * Delete a specific album
+ */
 
 const destroy = async (req, res) => {
     console.log("delete");

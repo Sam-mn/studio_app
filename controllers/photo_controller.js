@@ -1,6 +1,11 @@
 const { Photo, User, Album } = require("../models");
 const { matchedData, validationResult } = require("express-validator");
 
+/**
+ * GET
+ * Get all photos
+ */
+
 const index = async (req, res) => {
     let user = null;
     try {
@@ -19,6 +24,11 @@ const index = async (req, res) => {
     });
 };
 
+/**
+ *  GET
+ * Get a specific photo
+ */
+
 const show = async (req, res) => {
     const photoId = req.params.photoId;
     const photo = await new Photo({ id: photoId }).fetch({
@@ -36,6 +46,11 @@ const show = async (req, res) => {
         photo,
     });
 };
+
+/**
+ *  POST
+ * Store a new photo
+ */
 
 const store = async (req, res) => {
     const errors = validationResult(req);
@@ -67,6 +82,11 @@ const store = async (req, res) => {
         throw error;
     }
 };
+
+/**
+ * PUT
+ * Update a specific photo
+ */
 
 const update = async (req, res) => {
     const photo = await new Photo({
@@ -108,6 +128,11 @@ const update = async (req, res) => {
         throw error;
     }
 };
+
+/**
+ * POST
+ * Post many photos with related album
+ */
 
 const addPhotoToAlbum = async (req, res) => {
     const errors = validationResult(req);
@@ -154,6 +179,11 @@ const addPhotoToAlbum = async (req, res) => {
         throw error;
     }
 };
+
+/**
+ * DELETE
+ * Delete a specific photo
+ */
 
 const destroy = async (req, res) => {
     const photoId = req.params.photoId;
