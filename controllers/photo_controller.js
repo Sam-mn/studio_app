@@ -19,6 +19,24 @@ const index = async (req, res) => {
     });
 };
 
+const show = async (req, res) => {
+    const photoId = req.params.photoId;
+    const photo = await new Photo({ id: photoId }).fetch({
+        require: false,
+    });
+
+    if (photo.get("user_id") !== req.user.data.id) {
+        res.send({
+            message: "It is not your photo",
+        });
+        return;
+    }
+    res.send({
+        status: "success",
+        photo,
+    });
+};
+
 const store = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -50,22 +68,45 @@ const store = async (req, res) => {
     }
 };
 
-const show = async (req, res) => {
-    const photoId = req.params.photoId;
-    const photo = await new Photo({ id: photoId }).fetch({
-        require: false,
-    });
-
-    if (photo.get("user_id") !== req.user.data.id) {
-        res.send({
-            message: "It is not your photo",
+const update = async (req, res) => {
+    const photo = await new Photo({
+        id: req.params.photoId,
+        user_id: req.user.data.id,
+    }).fetch({ require: false });
+    if (!photo) {
+        res.status(404).send({
+            status: "fail",
+            data: "Photo Not Found",
         });
         return;
     }
-    res.send({
-        status: "success",
-        photo,
-    });
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        res.status(422).send({
+            status: "fail",
+            data: errors.array(),
+        });
+        return;
+    }
+
+    const validData = matchedData(req);
+
+    try {
+        const updatedPhoto = await photo.save(validData);
+
+        res.send({
+            status: "success",
+            data: {
+                photo: updatedPhoto,
+            },
+        });
+    } catch (error) {
+        res.status(500).send({
+            status: "error",
+            message: "Exception thrown in database when updating a photo.",
+        });
+        throw error;
+    }
 };
 
 const addPhotoToAlbum = async (req, res) => {
@@ -147,8 +188,9 @@ const destroy = async (req, res) => {
 
 module.exports = {
     index,
-    store,
     show,
+    store,
+    update,
     addPhotoToAlbum,
     destroy,
 };

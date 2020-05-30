@@ -4,10 +4,12 @@ const {
     index,
     show,
     store,
+    update,
     destroy,
 } = require("../controllers/photo_controller");
 const {
-    createPhotoValidations,
+    createPhotoValidationsRules,
+    updatingPhotoValidationsRules,
 } = require("../validationRules/album_photo_validationRules");
 
 //Get all photos
@@ -18,10 +20,10 @@ router.get("/:photoId", show);
 
 // Store a single photo
 // To store many photos use POST => ('/albums/:albumId/photos')
-router.post("/", [createPhotoValidations], store);
+router.post("/", [createPhotoValidationsRules], store);
 
 //Update a specific photo
-router.put("/:photoId");
+router.put("/:photoId", [updatingPhotoValidationsRules], update);
 
 //Destroy a specific photo
 router.delete("/:photoId", destroy);
