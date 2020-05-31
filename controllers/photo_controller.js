@@ -184,8 +184,9 @@ const destroy = async (req, res) => {
 
 /**
  * POST
- * Post many photos with related album
+ * relate existing photos to an album
  */
+
 const addPhotoToAlbum = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -206,6 +207,7 @@ const addPhotoToAlbum = async (req, res) => {
                 id: req.params.albumId,
             }).fetch({
                 withRelated: "photo",
+                require: false,
             });
             if (!album) {
                 res.status(403).send({
@@ -227,6 +229,66 @@ const addPhotoToAlbum = async (req, res) => {
             status: "error",
             message:
                 "Exception thrown in database when creating a new related photo.",
+        });
+        throw error;
+    }
+};
+
+/**
+ * POST
+ * relate many photos with related album
+ */
+
+const addManyPhotoToAlbum = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        res.status(422).send({
+            status: "fail",
+            data: errors.array(),
+        });
+        return;
+    }
+
+    const validData = matchedData(req);
+
+    try {
+        const album = await new Album({
+            id: req.params.albumId,
+            user_id: req.user.data.id,
+        }).fetch({ withRelated: "photo", require: false });
+
+        if (!album) {
+            res.status(403).send({
+                status: "fail",
+                message: `You do not have an album with id ${req.params.albumId}`,
+            });
+            return;
+        }
+
+        validData.photo_id.forEach(async (value) => {
+            const photo = await new Photo({
+                id: value,
+                user_id: req.user.data.id,
+            }).fetch({ require: false });
+
+            if (!photo) {
+                res.status(403).send({
+                    status: "fail",
+                    message: `You do not have photo with id ${value}`,
+                });
+                return;
+            }
+
+            await album.photo().attach(photo);
+            res.send({
+                status: "success",
+                data: null,
+            });
+        });
+    } catch (error) {
+        res.status(500).send({
+            status: "error",
+            message: "Exception thrown in database.",
         });
         throw error;
     }
@@ -280,5 +342,6 @@ module.exports = {
     update,
     destroy,
     addPhotoToAlbum,
+    addManyPhotoToAlbum,
     deletePhotoFromAlbum,
 };

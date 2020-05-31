@@ -7,7 +7,7 @@ const { store } = require("../controllers/user_controller");
 
 // Get home page.
 router.get("/", function (req, res, next) {
-    res.send({ title: "It will not take more than 4 days" });
+    res.send({ title: "HOME" });
 });
 
 // add ability to register
