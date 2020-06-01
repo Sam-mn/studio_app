@@ -214,9 +214,9 @@ const createAddPhotoToAlbum = async (req, res) => {
         validData.photos.forEach(async (data) => {
             data.user_id = req.user.data.id;
 
-            const photo = await new Photo(data).save();
             const album = await new Album({
                 id: req.params.albumId,
+                user_id: req.user.data.id,
             }).fetch({
                 withRelated: "photo",
                 require: false,
@@ -229,12 +229,14 @@ const createAddPhotoToAlbum = async (req, res) => {
                 return;
             }
 
-            await album.photo().attach(photo);
-        });
+            const photo = await new Photo(data).save();
 
-        res.send({
-            status: "success",
-            data: null,
+            await album.photo().attach(photo);
+
+            res.send({
+                status: "success",
+                data: null,
+            });
         });
     } catch (error) {
         res.status(500).send({
@@ -330,7 +332,7 @@ const deletePhotoFromAlbum = async (req, res) => {
         if (!photo || !album) {
             res.status(403).send({
                 status: "fail",
-                message: `NOT FOUND`,
+                message: `Fail when trying to get album & photo (NOT FOUND)`,
             });
             return;
         }
