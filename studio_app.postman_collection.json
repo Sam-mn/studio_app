@@ -1,0 +1,609 @@
+{
+	"info": {
+		"_postman_id": "c1f07a21-9864-47bb-96c1-32b9f94fbd69",
+		"name": "studio_app",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "photos",
+			"item": [
+				{
+					"name": "GET / all photos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoxLCJlbWFpbCI6InNhbWVyLm1uckBnbWFpbC5jb20ifSwiaWF0IjoxNTkwOTk4OTMwLCJleHAiOjE1OTEwODUzMzB9.OBmXJpkKWpsOSqE6U6LTWc6BqilGbSrim-T_c4gUTao",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/photos",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"photos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get/ specifc photo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoxLCJlbWFpbCI6InNhbWVyLm1uckBnbWFpbC5jb20ifSwiaWF0IjoxNTkxMDMzMTU4LCJleHAiOjE1OTExMTk1NTh9.4DmN3ZNRqgO2Fuy9vTSDtvGJRMrHhJksew_mlUxNTww",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/photos/1",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"photos",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST / photos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoxLCJlbWFpbCI6InNhbWVyLm1uckBnbWFpbC5jb20ifSwiaWF0IjoxNTkxMDAxNDA4LCJleHAiOjE1OTEwODc4MDh9._7l8bI3DyWlSL0z4r8v0CtRRojw0YiuFqt-tFFi5-RQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title\": \"SAMER photo3\",\n\t\"url\": \"safsadsfa url\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/photos",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"photos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT / Update photo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoxLCJlbWFpbCI6InNhbWVyLm1uckBnbWFpbC5jb20ifSwiaWF0IjoxNTkwOTk4OTMwLCJleHAiOjE1OTEwODUzMzB9.OBmXJpkKWpsOSqE6U6LTWc6BqilGbSrim-T_c4gUTao",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title\": \"updated title\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/photos/31",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"photos",
+								"31"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE/ photo/:id (samer)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoxLCJlbWFpbCI6InNhbWVyLm1uckBnbWFpbC5jb20ifSwiaWF0IjoxNTkwOTk4OTMwLCJleHAiOjE1OTEwODUzMzB9.OBmXJpkKWpsOSqE6U6LTWc6BqilGbSrim-T_c4gUTao",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/photos/35",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"photos",
+								"35"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "albums",
+			"item": [
+				{
+					"name": "GET/ albums",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoxLCJlbWFpbCI6InNhbWVyLm1uckBnbWFpbC5jb20ifSwiaWF0IjoxNTkwOTk4OTMwLCJleHAiOjE1OTEwODUzMzB9.OBmXJpkKWpsOSqE6U6LTWc6BqilGbSrim-T_c4gUTao",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/albums",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"albums"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET/ specific albums",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoxLCJlbWFpbCI6InNhbWVyLm1uckBnbWFpbC5jb20ifSwiaWF0IjoxNTkwNzc0MTE5LCJleHAiOjE1OTA4NjA1MTl9.GRUONiO6RlrNa8R2YYkka75P7FIz0w8GVAakzZiS8f8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/albums/10",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"albums",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST/ albums",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoxLCJlbWFpbCI6InNhbWVyLm1uckBnbWFpbC5jb20ifSwiaWF0IjoxNTkwOTk4OTMwLCJleHAiOjE1OTEwODUzMzB9.OBmXJpkKWpsOSqE6U6LTWc6BqilGbSrim-T_c4gUTao",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title\": \"test album 2\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/albums",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"albums"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT / UPDATE /ِ Album",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoxLCJlbWFpbCI6InNhbWVyLm1uckBnbWFpbC5jb20ifSwiaWF0IjoxNTkwOTk4OTMwLCJleHAiOjE1OTEwODUzMzB9.OBmXJpkKWpsOSqE6U6LTWc6BqilGbSrim-T_c4gUTao",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title\": \"updated the new album 2\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/albums/6",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"albums",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE / album",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoxLCJlbWFpbCI6InNhbWVyLm1uckBnbWFpbC5jb20ifSwiaWF0IjoxNTkwOTk4OTMwLCJleHAiOjE1OTEwODUzMzB9.OBmXJpkKWpsOSqE6U6LTWc6BqilGbSrim-T_c4gUTao",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/albums/9",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"albums",
+								"9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST / relate an array of photos to specific album",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoxLCJlbWFpbCI6InNhbWVyLm1uckBnbWFpbC5jb20ifSwiaWF0IjoxNTkxMDMzMTU4LCJleHAiOjE1OTExMTk1NTh9.4DmN3ZNRqgO2Fuy9vTSDtvGJRMrHhJksew_mlUxNTww",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"photo_id\": [45, 46, 47]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/albums/12/photos",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"albums",
+								"12",
+								"photos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /create and relate photos to an album",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoxLCJlbWFpbCI6InNhbWVyLm1uckBnbWFpbC5jb20ifSwiaWF0IjoxNTkxMDMzMTU4LCJleHAiOjE1OTExMTk1NTh9.4DmN3ZNRqgO2Fuy9vTSDtvGJRMrHhJksew_mlUxNTww",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"photos\": [\n{\n\t\"title\": \"Abisko\",\n\t\"url\": \"https://stfturist.imgix.net/app/uploads/2017/11/norrsken-stf-abisko-1.jpg?auto=format%2Cenhance\"\n},\n{\n\t\"title\": \"\",\n\t\"url\": \"\",\n\t\"comment\": \"\"\n}\n]}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/albums/12/manyPhotos",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"albums",
+								"12",
+								"manyPhotos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE relation between photo album",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoxLCJlbWFpbCI6InNhbWVyLm1uckBnbWFpbC5jb20ifSwiaWF0IjoxNTkxMDMzMTU4LCJleHAiOjE1OTExMTk1NTh9.4DmN3ZNRqgO2Fuy9vTSDtvGJRMrHhJksew_mlUxNTww",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/albums/11/photos/48",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"albums",
+								"11",
+								"photos",
+								"48"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "profile",
+			"item": [
+				{
+					"name": "GET/ users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoic2FtZXIubW5yQGdtYWlsLmNvbSIsImlhdCI6MTU5MDY5MTU5M30.iwOANg1e47cDwMqgQ3Qi-IiWqVVE3jQqsNgTo-F4RG8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/users",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post / register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"jn@badcameraphotography.com\",\n    \"password\": \"omg-smile\",\n    \"first_name\": \"Johan\",\n    \"last_name\": \"Nordström\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/register",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /login (samer)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoxLCJlbWFpbCI6InNhbWVyLm1uckBnbWFpbC5jb20ifSwiaWF0IjoxNTkwOTk4OTMwLCJleHAiOjE1OTEwODUzMzB9.OBmXJpkKWpsOSqE6U6LTWc6BqilGbSrim-T_c4gUTao",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"samer.mnr@gmail.com\",\n\t\"password\": \"samer\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/login",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /login (johan)",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"jn@badcameraphotography.com\",\n    \"password\": \"omg-smile\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/login",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /refresh token",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjo2LCJlbWFpbCI6ImpuQGJhZGNhbWVyYXBob3RvZ3JhcGh5LmNvbSJ9LCJpYXQiOjE1OTEwMDY3NjIsImV4cCI6MTU5MTYxMTU2Mn0.JZ1_D2i3fZuGDJFvITlaUWK3nTQxJPlPzx6ZP8oH9hY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/refresh",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
