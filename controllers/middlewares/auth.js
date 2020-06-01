@@ -3,7 +3,6 @@ const jwt = require("jsonwebtoken");
 /**
  * Check the token before (/users, /albums, /photos) requests
  */
-
 const checkTheToken = async (req, res, next) => {
     if (!req.headers.authorization) {
         res.status(401).send({

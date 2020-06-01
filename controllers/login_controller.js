@@ -1,6 +1,5 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
 const { User } = require("../models");
 
 /**
@@ -9,56 +8,73 @@ const { User } = require("../models");
  */
 
 const login = async (req, res) => {
-    const user = await new User({
-        email: req.body.email,
-    }).fetch({
-        require: false,
-    });
-
-    if (!user) {
-        res.status(401).send({
-            status: "fail",
-            data: "Authorization failed",
+    try {
+        const user = await new User({
+            email: req.body.email,
+        }).fetch({
+            require: false,
         });
-        return;
-    }
 
-    const hashedPassword = user.get("password");
-    const checkTheHashedPassword = await bcrypt.compare(
-        req.body.password,
-        hashedPassword
-    );
+        if (!user) {
+            res.status(401).send({
+                status: "fail",
+                data: "User is not found",
+            });
+            return;
+        }
 
-    if (!checkTheHashedPassword) {
-        res.status(401).send({
-            status: "fail",
-            data: "Wrong password",
+        const hashedPassword = user.get("password");
+        const checkTheHashedPassword = await bcrypt.compare(
+            req.body.password,
+            hashedPassword
+        );
+
+        if (!checkTheHashedPassword) {
+            res.status(401).send({
+                status: "fail",
+                data: "Wrong password",
+            });
+            return;
+        }
+
+        const payload = {
+            data: {
+                id: user.get("id"),
+                email: user.get("email"),
+            },
+        };
+
+        const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+            expiresIn: process.env.TOKEN_LIFETIME || "1d",
         });
-        return;
+
+        const refreshToken = jwt.sign(
+            payload,
+            process.env.REFRESH_TOKEN_SECRET,
+            {
+                expiresIn: process.env.REFRESH_TOKEN_LIFETIME || "1w",
+            }
+        );
+
+        res.send({
+            data: {
+                accessToken,
+                refreshToken,
+            },
+        });
+    } catch (error) {
+        res.status(500).send({
+            status: "error",
+            message: "Exception thrown in database when trying to login.",
+        });
+        throw error;
     }
-
-    const payload = {
-        data: {
-            id: user.get("id"),
-            email: user.get("email"),
-        },
-    };
-
-    var token = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: process.env.TOKEN_LIFETIME || "1d",
-    });
-
-    var refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
-        expiresIn: process.env.REFRESH_TOKEN_LIFETIME || "1d",
-    });
-
-    res.send({
-        data: {
-            token,
-            refreshToken,
-        },
-    });
 };
+
+/**
+ * POST
+ * get a new access token by refresh token
+ */
 
 const refreshToken = async (req, res) => {
     if (!req.headers.authorization) {
@@ -79,20 +95,18 @@ const refreshToken = async (req, res) => {
         return;
     }
     try {
-        const data = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
+        const { data } = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
 
-        const payload = { data: data.data };
+        const payload = { data };
 
-        const access_token = jwt.sign(
-            payload,
-            process.env.ACCESS_TOKEN_SECRET,
-            { expiresIn: process.env.ACCESS_TOKEN_LIFETIME || "1h" }
-        );
+        const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+            expiresIn: process.env.ACCESS_TOKEN_LIFETIME || "1h",
+        });
 
         res.send({
             status: "success",
             data: {
-                access_token,
+                accessToken,
             },
         });
     } catch (error) {

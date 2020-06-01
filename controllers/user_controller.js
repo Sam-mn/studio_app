@@ -2,6 +2,10 @@ const { User } = require("../models");
 const { matchedData, validationResult } = require("express-validator");
 const bcrypt = require("bcrypt");
 
+/**
+ * Get
+ * Show the user name and email
+ */
 const show = async (req, res) => {
     if (!req.user) {
         res.status(401).send({
@@ -11,14 +15,24 @@ const show = async (req, res) => {
         return;
     }
 
-    // const user = await new models.User({ id: req.user.id }).fetch({
-    //     withRelated: "album",
-    // });
+    const user = await new User({ id: req.user.data.id }).fetch({
+        require: false,
+    });
+
     res.send({
         status: "success",
-        user: req.user,
+        data: {
+            first_name: user.get("first_name"),
+            last_name: user.get("last_name"),
+            email: user.get("email"),
+        },
     });
 };
+
+/**
+ * POST
+ * register a new user
+ */
 
 const store = async (req, res) => {
     const errors = validationResult(req);
@@ -40,13 +54,14 @@ const store = async (req, res) => {
     } catch (error) {
         res.status(500).send({
             status: "error",
-            message: "Exception thrown when hashing the password.",
+            message: "Exception thrown when trying to hash the password.",
         });
         throw error;
     }
 
     try {
-        const user = await new User(validData).save();
+        await new User(validData).save();
+
         res.status(201).send({
             status: "success",
             data: null,
@@ -54,7 +69,8 @@ const store = async (req, res) => {
     } catch (error) {
         res.status(500).send({
             status: "error",
-            message: "Exception thrown in database when creating a new user.",
+            message:
+                "Exception thrown in database when trying to create a new user.",
         });
         throw error;
     }

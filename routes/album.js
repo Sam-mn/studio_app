@@ -13,8 +13,9 @@ const {
     update,
     destroy,
 } = require("../controllers/album_controller");
+
 const {
-    addPhotoToAlbum,
+    createAddPhotoToAlbum,
     deletePhotoFromAlbum,
     addManyPhotoToAlbum,
 } = require("../controllers/photo_controller");
@@ -36,23 +37,22 @@ router.put("/:albumId", [updateAlbumValidationsRules], update);
  ********* The structure **********
  * {"photos": [
 {
-	"title": "I did it",
-	"url": "I am a url",
-	"comment": "related function"
+	"title": "",
+	"url": "",
+	"comment": ""
 },
 {
-	"title": "I did it2",
-	"url": "I am a url2",
-	"comment": "related function2"
+	"title": "",
+	"url": "",
+	"comment": ""
 }
 ]}
 */
-/*router.post(
-    "/:albumId/photos",
+router.post(
+    "/:albumId/manyPhotos",
     [createManyPhotosValidationsRules],
-    addPhotoToAlbum
+    createAddPhotoToAlbum
 );
-*/
 
 //relate existing photos to an album
 router.post(

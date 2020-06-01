@@ -7,23 +7,25 @@ const { matchedData, validationResult } = require("express-validator");
  */
 
 const index = async (req, res) => {
-    let user = null;
     try {
         user = await new User({ id: req.user.data.id }).fetch({
             withRelated: "album",
         });
-    } catch (err) {
-        console.error(err);
-        res.sendStatus(404);
-        return;
+
+        const albums = user.related("album");
+
+        res.send({
+            status: "success",
+            data: { albums },
+        });
+    } catch (error) {
+        res.status(500).send({
+            status: "error",
+            message:
+                "Exception thrown in database when trying to get all albums.",
+        });
+        throw error;
     }
-
-    const album = user.related("album");
-
-    res.send({
-        status: "success",
-        album,
-    });
 };
 
 /**
@@ -45,19 +47,19 @@ const show = async (req, res) => {
         if (!album) {
             res.status(404).send({
                 status: "fail",
-                message: "The album is not exist",
+                message: `Album with id: ${albumId} is not found`,
             });
             return;
         }
 
         res.send({
             status: "success",
-            album,
+            data: { album },
         });
     } catch (error) {
         res.status(500).send({
             status: "error",
-            message: "An unexpected error occurred when trying to get album.",
+            message: "Exception thrown in database when trying to get album.",
         });
         throw error;
     }
@@ -90,7 +92,8 @@ const store = async (req, res) => {
     } catch (error) {
         res.status(500).send({
             status: "error",
-            message: "Exception thrown in database when creating a new album.",
+            message:
+                "Exception thrown in database when trying to create a new album.",
         });
         throw error;
     }
@@ -102,18 +105,9 @@ const store = async (req, res) => {
  */
 
 const update = async (req, res) => {
-    const album = await new Album({
-        id: req.params.albumId,
-        user_id: req.user.data.id,
-    }).fetch({ require: false });
-    if (!album) {
-        res.status(404).send({
-            status: "fail",
-            data: "album Not Found",
-        });
-        return;
-    }
+    const albumId = req.params.albumId;
     const errors = validationResult(req);
+
     if (!errors.isEmpty()) {
         res.status(422).send({
             status: "fail",
@@ -125,6 +119,18 @@ const update = async (req, res) => {
     const validData = matchedData(req);
 
     try {
+        const album = await new Album({
+            id: albumId,
+            user_id: req.user.data.id,
+        }).fetch({ require: false });
+
+        if (!album) {
+            res.status(404).send({
+                status: "fail",
+                data: `Album with id: ${albumId} is not found`,
+            });
+            return;
+        }
         const updatedAlbum = await album.save(validData);
 
         res.send({
@@ -136,7 +142,8 @@ const update = async (req, res) => {
     } catch (error) {
         res.status(500).send({
             status: "error",
-            message: "Exception thrown in database when updating a album.",
+            message:
+                "Exception thrown in database when trying to update an album.",
         });
         throw error;
     }
@@ -148,8 +155,8 @@ const update = async (req, res) => {
  */
 
 const destroy = async (req, res) => {
-    console.log("delete");
     const albumId = req.params.albumId;
+
     try {
         const album = await new Album({ id: albumId }).fetch({
             withRelated: "photo",
@@ -159,12 +166,14 @@ const destroy = async (req, res) => {
         if (!album) {
             res.status(404).send({
                 status: "fail",
-                message: "The album is not exist",
+                message: `Album with id: ${albumId} is not found`,
             });
             return;
         }
+
         await album.photo().detach();
-        await new Album({ id: req.params.albumId }).destroy();
+        await album.destroy();
+
         res.send({
             status: "success",
             data: null,
@@ -172,11 +181,13 @@ const destroy = async (req, res) => {
     } catch (error) {
         res.status(500).send({
             status: "error",
-            message: "Exception thrown in database when deleting an album.",
+            message:
+                "Exception thrown in database when trying to delete an album.",
         });
         throw error;
     }
 };
+
 module.exports = {
     index,
     show,

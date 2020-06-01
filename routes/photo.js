@@ -19,7 +19,7 @@ router.get("/", index);
 router.get("/:photoId", show);
 
 // Store a single photo
-// To store many photos use POST => ('/albums/:albumId/photos')
+// To store many photos use POST => ('/albums/:albumId/manyPhotos')
 router.post("/", [createPhotoValidationsRules], store);
 
 //Update a specific photo
